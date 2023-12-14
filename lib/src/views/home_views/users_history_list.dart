@@ -14,6 +14,7 @@ import 'package:pos_admin/src/views/route_view/live_location_tracking.dart';
 import 'package:pos_admin/src/views/route_view/location_history_tracking.dart';
 import 'package:pos_admin/src/views/route_view/route_view.dart';
 import 'package:pos_admin/src/views/route_view/user_location_timeline_view.dart';
+import 'package:pos_admin/src/views/routes/route_names.dart';
 import 'package:pos_admin/src/widgets/drawer.dart';
 
 class UserHistorys extends StatefulWidget {
@@ -534,9 +535,9 @@ class _UserHistorysState extends State<UserHistorys> {
                                                       //       startAddress: "end",
                                                       //     ));
 
-                                                      Get.to(() =>
-                                                          UserLocationTimeLineView(
-                                                            startLocation: LatLng(
+                                                      Get.offAllNamed(
+                                                        RoutesName.USER_TIMELINE, arguments: {
+                                                        "startLocation": LatLng(
                                                                 locationController
                                                                     .userHistory[
                                                                         i]
@@ -549,17 +550,44 @@ class _UserHistorysState extends State<UserHistorys> {
                                                                     .inLocation
                                                                     .first
                                                                     .longitude),
-                                                            username:
+                                                            "username":
                                                                 locationController
                                                                     .userHistory[
                                                                         i]
                                                                     .username,
-                                                            dateTime:
+                                                            "dateTime":
                                                                 locationController
                                                                     .userHistory[
                                                                         i]
                                                                     .inTime,
-                                                          ));
+                                                      });
+
+                                                      // Get.to(() =>
+                                                      //     UserLocationTimeLineView(
+                                                      //       startLocation: LatLng(
+                                                      //           locationController
+                                                      //               .userHistory[
+                                                      //                   i]
+                                                      //               .inLocation
+                                                      //               .first
+                                                      //               .latitude,
+                                                      //           locationController
+                                                      //               .userHistory[
+                                                      //                   i]
+                                                      //               .inLocation
+                                                      //               .first
+                                                      //               .longitude),
+                                                      //       username:
+                                                      //           locationController
+                                                      //               .userHistory[
+                                                      //                   i]
+                                                      //               .username,
+                                                      //       dateTime:
+                                                      //           locationController
+                                                      //               .userHistory[
+                                                      //                   i]
+                                                      //               .inTime,
+                                                      //     ));
                                                     },
                                                     child: Container(
                                                       width: 70,

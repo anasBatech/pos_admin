@@ -16,22 +16,22 @@ const double CAMERA_ZOOM = 12;
 const double CAMERA_TILT = 0;
 const double CAMERA_BEARING = 30;
 
-class UserLocationTimeLineView extends StatefulWidget {
+class UserLocationTimeLineViewTest extends StatefulWidget {
   LatLng startLocation;
   String username;
   DateTime dateTime;
-  UserLocationTimeLineView(
+  UserLocationTimeLineViewTest(
       {super.key,
       required this.startLocation,
       required this.username,
       required this.dateTime});
 
   @override
-  State<UserLocationTimeLineView> createState() =>
+  State<UserLocationTimeLineViewTest> createState() =>
       _UserLocationTimeLineViewState();
 }
 
-class _UserLocationTimeLineViewState extends State<UserLocationTimeLineView> {
+class _UserLocationTimeLineViewState extends State<UserLocationTimeLineViewTest> {
   Completer<GoogleMapController> _controller = Completer();
 
   final locationController = Get.find<LocationController>();

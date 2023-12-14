@@ -7,6 +7,7 @@ import 'package:pos_admin/src/controllers/location_controller.dart';
 import 'package:pos_admin/src/views/home_views/home_view.dart';
 import 'package:pos_admin/src/views/home_views/users_history_list.dart';
 import 'package:pos_admin/src/views/route_view/live_location_tracking.dart';
+import 'package:pos_admin/src/views/routes/route_names.dart';
 import 'package:pos_admin/src/widgets/drawer.dart';
 
 class AllUsersView extends StatefulWidget {
@@ -361,9 +362,13 @@ class _AllUsersViewState extends State<AllUsersView> {
                                               //       startAddress: "end",
                                               //     ));
 
-                                              Get.to(() => UserHistorys(
-                                                    userName: userNameList[i],
-                                                  ));
+                                              Get.toNamed(RoutesName.USER_HISTORY_PAGE,arguments: {
+                                                "userName": userNameList[i],
+                                              });
+
+                                              // Get.to(() => UserHistorys(
+                                              //       userName: userNameList[i],
+                                              //     ));
                                             },
                                             child: Container(
                                               width: 70,

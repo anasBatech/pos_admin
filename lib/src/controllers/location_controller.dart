@@ -20,6 +20,72 @@ class LocationController extends GetxController {
 
   List<LocationNameModel> locationNames = [];
 
+
+   List<String> userNameList = [
+    "CAR1",
+    "CAR2",
+    "CAR3",
+    "CAR4",
+    "CAR5",
+    "CAR6",
+    "CAR7",
+    "CAR8",
+    "CAR9",
+    "CAR10",
+    "CAR11",
+    "CAR12",
+    "CAR13",
+    "CAR14",
+    "CAR15",
+    "CAR16",
+    "CAR17",
+    "CAR18",
+    "CAR19",
+    "CAR20",
+  ];
+
+   List<String> tempUserNameList = [
+    "CAR1",
+    "CAR2",
+    "CAR3",
+    "CAR4",
+    "CAR5",
+    "CAR6",
+    "CAR7",
+    "CAR8",
+    "CAR9",
+    "CAR10",
+    "CAR11",
+    "CAR12",
+    "CAR13",
+    "CAR14",
+    "CAR15",
+    "CAR16",
+    "CAR17",
+    "CAR18",
+    "CAR19",
+    "CAR20",
+  ];
+
+
+ searchForUser(String keyWord) {
+  if (keyWord.isNotEmpty) {
+    print(userNameList.contains(keyWord));
+
+      List<String> filteredList =
+        tempUserNameList.where((element) => element.contains(keyWord.toUpperCase())).toList();
+    print(keyWord);
+    print(filteredList);
+userNameList = List.from(filteredList);
+    // You may want to update userNameList or do something with the filteredList
+    // depending on your requirements.
+    update();
+  } else {
+    userNameList = List.from(tempUserNameList);
+    update();
+  }
+}
+
   Map<String, Marker> markers = {};
 // this will hold the generated polylines
   Set<Polyline> polylines = {};

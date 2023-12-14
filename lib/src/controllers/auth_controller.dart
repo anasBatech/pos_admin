@@ -4,6 +4,7 @@ import "package:get/get.dart";
 import 'package:pos_admin/src/views/auth_views/login_view.dart';
 import 'package:pos_admin/src/views/home_views/all_users_list_view.dart';
 import 'package:pos_admin/src/views/home_views/home_view.dart';
+import 'package:pos_admin/src/views/routes/route_names.dart';
 
 class AuthController extends GetxController {
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -14,10 +15,12 @@ class AuthController extends GetxController {
     await Future.delayed(const Duration(seconds: 2));
     auth.authStateChanges().listen((User? user) {
       if (user == null) {
-        Get.offAll(() => SignINView());
+        // Get.offAll(() => SignINView());
+        Get.offAllNamed(RoutesName.SIGN_IN_PAGE);
       } else {
         print('User is signed in!');
-        Get.offAll(const AllUsersView());
+        // Get.offAll(const AllUsersView());
+          Get.offAllNamed(RoutesName.HOME_PAGE);
       }
     });
   }
@@ -28,7 +31,8 @@ class AuthController extends GetxController {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       isLoading(false);
-      Get.offAll(const AllUsersView());
+      Get.offAllNamed(RoutesName.HOME_PAGE);
+      // Get.offAll(const AllUsersView());
       Get.snackbar("Successfully Logged in", "",
           maxWidth: 400,
           colorText: Colors.white,

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_admin/src/const/app_colors.dart';
+import 'package:pos_admin/src/const/app_font.dart';
 import 'package:pos_admin/src/const/app_style.dart';
 import 'package:pos_admin/src/controllers/auth_controller.dart';
 
@@ -25,26 +26,47 @@ class _SignINViewState extends State<SignINView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Expanded(
-              child: Image(
-            image: AssetImage("assets/icons/pos_logo.png"),
-          )),
+           Expanded(
+              child: Container(
+                color: Colors.white,
+                child: const Image(
+                          image: AssetImage("assets/icons/pos_logo.png"),
+                        ),
+              )),
           Expanded(
             child: Container(
-              color: Colors.white,
+              color: Color.fromARGB(255, 228, 219, 255),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Text("Admin Panel",style: primaryFontBold.copyWith(
+                    fontSize: 22
+                  ),),
+                  Text("Login with your email and password",style: primaryFont.copyWith(
+                    color: Colors.black45,
+                    fontSize: 12
+                  ),),
+                 const SizedBox(
+                    height: 50,
+                  ),
                   Container(
                     width: 330,
+                    decoration: BoxDecoration(
+                       color: Colors.white,
+                      borderRadius: BorderRadius.circular(10)
+                     ),
                     child: TextField(
                       controller: emailController,
                       keyboardType: TextInputType.emailAddress,
+                      style: primaryFontsemiBold.copyWith(
+                        fontSize: 15
+                      ),
                       decoration: InputDecoration(
+                        fillColor: Colors.white,
                           labelText: "Email",
                           suffixIcon: InkWell(
                               onTap: () {
@@ -62,11 +84,20 @@ class _SignINViewState extends State<SignINView> {
                     padding: const EdgeInsets.only(left: 10, right: 10),
                     child: Container(
                       width: 330,
+                     decoration: BoxDecoration(
+                       color: Colors.white,
+                      borderRadius: BorderRadius.circular(10)
+                     ),
                       child: TextField(
                         controller: passwordController,
                         obscureText: isObscure,
+                         style: primaryFontsemiBold.copyWith(
+                        fontSize: 15
+                      ),
                         decoration: InputDecoration(
                             labelText: "Password",
+                             fillColor: Colors.white,
+                             
                             suffixIcon: InkWell(
                                 onTap: () {
                                   setState(() {
@@ -109,16 +140,7 @@ class _SignINViewState extends State<SignINView> {
                   const SizedBox(
                     height: 10,
                   ),
-                  Obx(() => Container(
-                        width: 330,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              height: 5,
-                            ),
-                            authController.isLoading.isFalse
-                                ? InkWell(
+                        Obx(() => InkWell(
                                     onTap: () {
                                       if (emailController.text.isNotEmpty &&
                                           passwordController.text.isNotEmpty) {
@@ -135,55 +157,100 @@ class _SignINViewState extends State<SignINView> {
                                             backgroundColor: Colors.red);
                                       }
                                     },
-                                    child: Container(
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        color: primaryColor,
-                                      ),
-                                      alignment: Alignment.center,
-                                      child: const Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 15, right: 15),
-                                        child: Text("Sign in",
-                                            style:
-                                                TextStyle(color: Colors.white)),
-                                      ),
-                                    ),
-                                  )
-                                : Container(
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      color: primaryColor,
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 15, right: 15),
-                                      child: Container(
-                                        width: 40,
-                                        height: 25,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              height: 20,
-                                              width: 20,
-                                              child:
-                                                  const CircularProgressIndicator(
+                          child: Container(
+                                              height: 45,
+                                              width: 330,
+                                              decoration: BoxDecoration(
+                          color: primaryColor,
+                          borderRadius: BorderRadius.circular(20)
+                                              ),
+                                              alignment: Alignment.center,
+                                              child: authController.isLoading.isFalse
+                                ?   Text("Sign in",style: primaryFontBold.copyWith(
+                          color: Colors.white,
+                          fontSize: 20
+                                              ),) :const CircularProgressIndicator(
                                                 color: Colors.white,
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                          ],
                         ),
-                      ))
+                  ),
+
+                  // Obx(() => Container(
+                  //       width: 330,
+                  //       child: Row(
+                  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //         children: [
+                  //           Container(
+                  //             height: 5,
+                  //           ),
+                  //           authController.isLoading.isFalse
+                  //               ? InkWell(
+                  //                   onTap: () {
+                  //                     if (emailController.text.isNotEmpty &&
+                  //                         passwordController.text.isNotEmpty) {
+                  //                       authController.signIn(
+                  //                           context,
+                  //                           emailController.text,
+                  //                           passwordController.text);
+                  //                     } else {
+                  //                       Get.snackbar(
+                  //                           "Please Enter Email and Password to Continue",
+                  //                           "",
+                  //                           maxWidth: 400,
+                  //                           colorText: Colors.white,
+                  //                           backgroundColor: Colors.red);
+                  //                     }
+                  //                   },
+                  //                   child: Container(
+                  //                     height: 30,
+                  //                     decoration: BoxDecoration(
+                  //                       borderRadius: BorderRadius.circular(20),
+                  //                       color: primaryColor,
+                  //                     ),
+                  //                     alignment: Alignment.center,
+                  //                     child: const Padding(
+                  //                       padding: EdgeInsets.only(
+                  //                           left: 15, right: 15),
+                  //                       child: Text("Sign in",
+                  //                           style:
+                  //                               TextStyle(color: Colors.white)),
+                  //                     ),
+                  //                   ),
+                  //                 )
+                  //               : Container(
+                  //                   height: 30,
+                  //                   decoration: BoxDecoration(
+                  //                     borderRadius: BorderRadius.circular(20),
+                  //                     color: primaryColor,
+                  //                   ),
+                  //                   alignment: Alignment.center,
+                  //                   child: Padding(
+                  //                     padding: const EdgeInsets.only(
+                  //                         left: 15, right: 15),
+                  //                     child: Container(
+                  //                       width: 40,
+                  //                       height: 25,
+                  //                       child: Row(
+                  //                         mainAxisAlignment:
+                  //                             MainAxisAlignment.center,
+                  //                         children: [
+                  //                           Container(
+                  //                             height: 20,
+                  //                             width: 20,
+                  //                             child:
+                  //                                 const CircularProgressIndicator(
+                  //                               color: Colors.white,
+                  //                             ),
+                  //                           ),
+                  //                         ],
+                  //                       ),
+                  //                     ),
+                  //                   ),
+                  //                 )
+                  //         ],
+                  //       ),
+                  //     ))
                 ],
               ),
             ),
