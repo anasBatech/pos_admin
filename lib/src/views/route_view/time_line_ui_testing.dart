@@ -9,6 +9,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pos_admin/src/const/app_colors.dart';
 import 'package:pos_admin/src/controllers/location_controller.dart';
 import 'package:pos_admin/src/models/location_model.dart';
+import 'package:pos_admin/src/views/routes/route_names.dart';
 import 'package:pos_admin/src/widgets/time_line_widgets/time_line_data_list_widget.dart';
 
 // import 'package:google_maps_flutter_web/google_maps_flutter_web.dart';
@@ -42,7 +43,7 @@ class _UserLocationTimeLineViewState extends State<UserLocationTimeLineViewTest>
 // this is the key object - the PolylinePoints
 // which generates every polyline between start and finish
   PolylinePoints polylinePoints = PolylinePoints();
-  String googleAPIKey = "AIzaSyDergFiQQSAtleFHO8tkKGj2ox1oYRIFsI";
+  // String googleAPIKey = "AIzaSyACBsvJOlGp_buVICn_P5iha5h12vXFRK0";
 
    
 
@@ -78,6 +79,10 @@ class _UserLocationTimeLineViewState extends State<UserLocationTimeLineViewTest>
 
   bool isSataliteView = false;
 
+  getBack() async{
+    Get.offAllNamed(RoutesName.HOME_PAGE);
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -88,28 +93,40 @@ class _UserLocationTimeLineViewState extends State<UserLocationTimeLineViewTest>
         target: widget.startLocation);
     return Scaffold(
       body: GetBuilder<LocationController>(builder: (_) {
-        return Row(
-          children: [
-            TimeLineDataListWidget(
-              choosenDate: widget.dateTime,
-            ),
-            GetBuilder<LocationController>(builder: (_) {
-              return Container(
-                height: size.height,
-                width: size.width * 0.65,
-                child: GoogleMap(
-                    myLocationEnabled: true,
-                    compassEnabled: true,
-                    tiltGesturesEnabled: false,
-                    markers: locationController.markers.values.toSet(),
-                    polylines: locationController.polylines,
-                    mapType:
-                        isSataliteView ? MapType.satellite : MapType.normal,
-                    initialCameraPosition: initialLocation,
-                    onMapCreated: onMapCreated),
-              );
-            }),
-          ],
+        return WillPopScope(
+          onWillPop: (){
+           return getBack();
+          },
+          child: locationController.isNameLoading.isTrue?  Center(
+            child: CircularProgressIndicator(),
+          ) : Row(
+            children: [
+              TimeLineDataListWidget(
+                choosenDate: widget.dateTime,
+                locationNames: locationController
+                                              .locationNames,
+                totalTravelledPath: locationController.totalDistanceTraveled.value,
+                startLocation: widget.startLocation,
+                username: widget.username,
+              ),
+              GetBuilder<LocationController>(builder: (_) {
+                return Container(
+                  height: size.height,
+                  width: size.width * 0.65,
+                  child: GoogleMap(
+                      myLocationEnabled: true,
+                      compassEnabled: true,
+                      tiltGesturesEnabled: false,
+                      markers: locationController.markers.values.toSet(),
+                      polylines: locationController.polylines,
+                      mapType:
+                          isSataliteView ? MapType.satellite : MapType.normal,
+                      initialCameraPosition: initialLocation,
+                      onMapCreated: onMapCreated),
+                );
+              }),
+            ],
+          ),
         );
       }),
       floatingActionButton: Padding(

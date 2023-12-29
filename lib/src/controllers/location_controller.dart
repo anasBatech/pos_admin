@@ -3,6 +3,7 @@ import 'dart:html' as html;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:geocoding_resolver/geocoding_resolver.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pos_admin/src/const/firebase_constants.dart';
@@ -296,32 +297,42 @@ userNameList = List.from(filteredList);
   dynamic deg2rad(deg) {
     return deg * (math.pi / 180);
   }
-
-//AIzaSyDergFiQQSAtleFHO8tkKGj2ox1oYRIFsI
+  GeoCoder geoCoder = GeoCoder();
+  //AIzaSyACBsvJOlGp_buVICn_P5iha5h12vXFRK0
   Future<String> getPlacesName(LatLng latLng) async {
     String placeName = "";
-    try {
-      double lat = latLng.latitude;
-      double lng = latLng.longitude;
-      String apiKey = 'AIzaSyDergFiQQSAtleFHO8tkKGj2ox1oYRIFsI';
-      String url =
-          'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$apiKey';
-      http.Response response = await http.get(Uri.parse(url));
+    // try {
+    //   double lat = latLng.latitude;
+    //   double lng = latLng.longitude;
+    //   String apiKey = 'AIzaSyACBsvJOlGp_buVICn_P5iha5h12vXFRK0';
+    //   String url =
+    //       'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$apiKey';
+    //         http.Response response = await http.get(Uri.parse(url));
 
-      if (response.statusCode == 200) {
-        Map<String, dynamic> data = jsonDecode(response.body);
-        String address = data['results'][0]['formatted_address'];
-        placeName = address;
-        // print(placeName);
-        // print('Address: $address');
-      } else {
-        print('Failed to retrieve geocoding data');
-      }
-    } catch (e) {
-      print("Error: $e");
-    }
+    //   if (response.statusCode == 200) {
+    //     Map<String, dynamic> data = jsonDecode(response.body);
+    //     String address = data['results'][0]['formatted_address'];
+    //     placeName = address;
+    //     print(placeName);
+    //     print('Address: $address');
+    //   } else {
+    //     print('Failed to retrieve geocoding data');
+    //   }
+    // } catch (e) {
+    //   print("Error: $e");
+    // }
+
+   double lat = latLng.latitude;
+    double lng = latLng.longitude;
+   Address address = await geoCoder.getAddressFromLatLng(
+    latitude: lat,
+    longitude: lng
+    );
+  
+     placeName =  "${address.displayName},${address.addressDetails.city}";
+   
     return placeName;
-  }
+  }  
 
   generateListOfLocationNames(List<LocationModel> polyline) async {
     locationNames.clear();
@@ -331,7 +342,7 @@ userNameList = List.from(filteredList);
     while (i < polyline.length) {
       String placename = await getPlacesName(polyline[i].latLang);
       locationNames.add(LocationNameModel(
-          createdAt: polyline[i].date, locationName: placename));
+          createdAt: polyline[i].date, locationName: placename,isinvoiced: polyline[i].isInvoiced));
       locationNames.sort((a, b) => a.createdAt.compareTo(b.createdAt));
       update();
       i += 5;

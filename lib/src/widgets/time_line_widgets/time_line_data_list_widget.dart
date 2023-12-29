@@ -1,13 +1,23 @@
+import 'package:date_format/date_format.dart';
 import 'package:datepicker_dropdown/datepicker_dropdown.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pos_admin/src/const/app_font.dart';
+import 'package:pos_admin/src/models/location_names_model.dart';
+import 'package:pos_admin/src/views/route_view/user_location_timeline_view.dart';
+import 'package:pos_admin/src/views/routes/route_names.dart';
 
 class TimeLineDataListWidget extends StatefulWidget {
   DateTime choosenDate;
- TimeLineDataListWidget({super.key,required this.choosenDate});
+  List<LocationNameModel> locationNames;
+  double totalTravelledPath;
+  LatLng startLocation;
+  String username;
+ TimeLineDataListWidget({super.key,required this.choosenDate,required this.locationNames,required this.totalTravelledPath,required this.startLocation,required this.username});
 
   @override
   State<TimeLineDataListWidget> createState() => _TimeLineDataListWidgetState();
@@ -22,7 +32,6 @@ class _TimeLineDataListWidgetState extends State<TimeLineDataListWidget> {
     "karnataka",
     "Thaiwan",
     "pondichery"
-
    ];
 
 
@@ -56,6 +65,14 @@ class _TimeLineDataListWidgetState extends State<TimeLineDataListWidget> {
                       children: [
                         Row(
                           children: [
+                            InkWell(
+                              onTap: (){
+                                Get.offAllNamed(RoutesName.HOME_PAGE);
+                              },
+                              child: const Icon(Icons.arrow_back)),
+                          const  SizedBox(
+                              width: 10,
+                            ),
                            const  Icon(
                               Icons.location_on,
                               color: Colors.blue,
@@ -72,11 +89,20 @@ class _TimeLineDataListWidgetState extends State<TimeLineDataListWidget> {
                             ),
                           ],
                         ),
-                        Text("Today".toUpperCase(),style: primaryFontsemiBold.copyWith(
-                          fontSize: 14,
-                          color: Colors.black54
-
-                        ),)
+                        InkWell(
+                          onTap: (){
+                            DateTime todaydate = DateTime.now();
+                            Get.offAll(()=> UserLocationTimeLineView(
+                              dateTime: todaydate,
+                              startLocation: widget.startLocation,
+                              username: widget.username,
+                            ));
+                          },
+                          child: Text("Today".toUpperCase(),style: primaryFontsemiBold.copyWith(
+                            fontSize: 14,
+                            color: Colors.black54
+                          ),),
+                        )
                       ],
                     ),
                   ),
@@ -91,18 +117,51 @@ class _TimeLineDataListWidgetState extends State<TimeLineDataListWidget> {
                           border: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.circular(10))), // optional
-
+                                yearFlex: 2,
+                                dayFlex: 2,
+                                monthFlex: 3,
                       isDropdownHideUnderline: true, // optional
                       isFormValidator: true, // optional
                       startYear: 2020, // optional
                       endYear: 2030, // optional
-                      width: 12, // optional
+                      width: 15, // optional
                       selectedDay: widget.choosenDate.day, // optional
                       selectedMonth:  widget.choosenDate.month, // optional
                       selectedYear:  widget.choosenDate.year, // optional
-                      onChangedDay: (value) => print('onChangedDay: $value'),
-                      onChangedMonth: (value) => print('onChangedMonth: $value'),
-                      onChangedYear: (value) => print('onChangedYear: $value'),
+
+                      onChangedDay: (value) {
+                        print('onChangedDay: $value');
+                        int day = int.parse(value!);
+                         
+                        DateTime dateChoosen = DateTime(widget.choosenDate.year,widget.choosenDate.month,day);
+                         Get.offAll(()=> UserLocationTimeLineView(
+                              dateTime: dateChoosen,
+                              startLocation: widget.startLocation,
+                              username: widget.username,
+                            ));
+     
+                      },
+                      onChangedMonth: (value) {
+                        print('onChangedMonth: $value');
+                         int months = int.parse(value!);
+                         DateTime dateChoosen = DateTime(widget.choosenDate.year,months,widget.choosenDate.day);
+                          Get.offAll(()=> UserLocationTimeLineView(
+                              dateTime: dateChoosen,
+                              startLocation: widget.startLocation,
+                              username: widget.username,
+                            ));
+                      },
+                      onChangedYear: (value) {
+                        print('onChangedYear: $value');
+                         int years = int.parse(value!);
+                         DateTime dateChoosen = DateTime(years,widget.choosenDate.month,widget.choosenDate.day);
+                          Get.offAll(()=> UserLocationTimeLineView(
+                              dateTime: dateChoosen,
+                              startLocation: widget.startLocation,
+                              username: widget.username,
+                            ));
+                      },
+                        
                       //boxDecoration: BoxDecoration(
                       // border: Border.all(color: Colors.grey, width: 1.0)), // optional
                       // showDay: false,// optional
@@ -114,7 +173,7 @@ class _TimeLineDataListWidgetState extends State<TimeLineDataListWidget> {
                       // hintTextStyle: TextStyle(color: Colors.grey), // optional
                     ),
                   ),
-                const  SizedBox(
+                const SizedBox(
                     height: 15,
                   ),
 
@@ -122,7 +181,7 @@ class _TimeLineDataListWidgetState extends State<TimeLineDataListWidget> {
                     padding: const EdgeInsets.only(left: 15),
                     child: Row(
                       children: [
-                        Image.asset("assets/icons/long-distance (1).png",height: 40,),
+                       Image.asset("assets/icons/long-distance (1).png",height: 40,),
                        const SizedBox(
                           width: 10,
                         ),
@@ -133,7 +192,7 @@ class _TimeLineDataListWidgetState extends State<TimeLineDataListWidget> {
                               fontSize: 13,
                               fontWeight: FontWeight.w400
                             ),),
-                             Text("45KM",style: GoogleFonts.poppins(
+                             Text("${widget.totalTravelledPath.toStringAsFixed(2)} KM",style: GoogleFonts.poppins(
                               fontSize: 12,
                               fontWeight: FontWeight.w400
                             ),)
@@ -156,7 +215,8 @@ class _TimeLineDataListWidgetState extends State<TimeLineDataListWidget> {
                 padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 25),
                 child: ListView.builder(
                   shrinkWrap: true,
-                  itemCount: places.length,
+                  addRepaintBoundaries : false,
+                  itemCount: widget.locationNames.length,
                   itemBuilder: (context, index) {
                     return Row(
                         crossAxisAlignment:index == places.length - 1 ?  CrossAxisAlignment.end : CrossAxisAlignment.start,
@@ -164,7 +224,7 @@ class _TimeLineDataListWidgetState extends State<TimeLineDataListWidget> {
                         children: [
                           index == 0 ? SvgPicture.asset("assets/icons/moto.svg",height: 25,
                           color: Colors.black54,
-                          ) : index == 3 ? Image.asset("assets/icons/payment.png",height: 25,): SvgPicture.asset("assets/icons/moto.svg",height: 25,
+                          ) : widget.locationNames[index].isinvoiced ? Image.asset("assets/icons/payment.png",height: 25,): SvgPicture.asset("assets/icons/moto.svg",height: 25,
                           color: Colors.white,
                           ),
             
@@ -176,11 +236,11 @@ class _TimeLineDataListWidgetState extends State<TimeLineDataListWidget> {
                               borderRadius: BorderRadius.only(
                                 topLeft: index == 0 ? Radius.circular(10) : Radius.circular(0),
                                 topRight:  index == 0 ? Radius.circular(10) : Radius.circular(0),
-                                bottomLeft:  index == places.length - 1 ? Radius.circular(10) : Radius.circular(0),
-                                bottomRight:  index == places.length - 1 ? Radius.circular(10) : Radius.circular(0),
+                                bottomLeft:  index == widget.locationNames.length - 1 ? Radius.circular(10) : Radius.circular(0),
+                                bottomRight:  index == widget.locationNames.length - 1 ? Radius.circular(10) : Radius.circular(0),
                               )
                             ),
-                            alignment:index == places.length - 1 ?  Alignment.bottomCenter : Alignment.topCenter,
+                            alignment:index == widget.locationNames.length - 1 ?  Alignment.bottomCenter : Alignment.topCenter,
                             child: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 3),
                               child: Container(
@@ -194,14 +254,27 @@ class _TimeLineDataListWidgetState extends State<TimeLineDataListWidget> {
                             ),
                           ),
             
-                          Container(
-                            width: size.width * 0.22,
-                            child: Text("48-52, Muniyappa St, Neelam Garden, Siruvallur, Perambur, Chennai, Tamil Nadu 600011",style: primaryFont.copyWith(
-                              color: Colors.black45,
-                              fontSize: 12
-                            ),),
-                          )
-            
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: size.width * 0.22,
+                                child: Text(widget.locationNames[index].locationName,style: primaryFont.copyWith(
+                                  color: Colors.black45,
+                                  fontSize: 12
+                                ),),
+                              ),
+ const SizedBox(
+                            height: 10,
+                          ),
+                          Text(formatDate(widget.locationNames[index].createdAt, [h,":",nn," " ,am]),style: primaryFontsemiBold.copyWith(
+                                  color: Colors.black54,
+                                  fontSize: 11,
+
+                                ),)
+                            ],
+                          ),
+                         
                         ],
                        );
                   },

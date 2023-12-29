@@ -42,7 +42,7 @@ class _UserLocationTimeLineViewState extends State<UserLocationTimeLineView> {
 // this is the key object - the PolylinePoints
 // which generates every polyline between start and finish
   PolylinePoints polylinePoints = PolylinePoints();
-  String googleAPIKey = "AIzaSyDergFiQQSAtleFHO8tkKGj2ox1oYRIFsI";
+  // String googleAPIKey = "AIzaSyACBsvJOlGp_buVICn_P5iha5h12vXFRK0";
 
    
 
@@ -50,8 +50,24 @@ class _UserLocationTimeLineViewState extends State<UserLocationTimeLineView> {
   @override
   void initState() {
     super.initState();
+    setInitialZooming();
     setInitialPolyLines();
     setLoading();
+  }
+
+  setInitialZooming() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+       
+
+        setState(() {
+          initialLocation = CameraPosition(
+        zoom: CAMERA_ZOOM,
+        bearing: CAMERA_BEARING,
+        tilt: CAMERA_TILT,
+        target: widget.startLocation);
+        });
+      
+    });
   }
 
   setLoading() async {
@@ -64,10 +80,19 @@ class _UserLocationTimeLineViewState extends State<UserLocationTimeLineView> {
     });
   }
 
+  CameraPosition? initialLocation;
+
   setInitialPolyLines() async {
     List<LocationModel> listPolys = await locationController.getLivePolyLine(
         widget.username, widget.dateTime);
-
+        
+setState(() {
+          initialLocation = CameraPosition(
+        zoom: CAMERA_ZOOM,
+        bearing: CAMERA_BEARING,
+        tilt: CAMERA_TILT,
+        target: listPolys.first.latLang);
+        });
     print("-----//<<---poly lines--->>//------");
     print(listPolys.length);
 
@@ -81,23 +106,25 @@ class _UserLocationTimeLineViewState extends State<UserLocationTimeLineView> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    CameraPosition initialLocation = CameraPosition(
-        zoom: CAMERA_ZOOM,
-        bearing: CAMERA_BEARING,
-        tilt: CAMERA_TILT,
-        target: widget.startLocation);
+    
     return Scaffold(
       body: GetBuilder<LocationController>(builder: (_) {
         return Row(
           children: [
             TimeLineDataListWidget(
-              choosenDate: widget.dateTime,
-            ),
+                choosenDate: widget.dateTime,
+                locationNames: locationController.locationNames,
+                totalTravelledPath: locationController.totalDistanceTraveled.value,
+                startLocation: widget.startLocation,
+                     username: widget.username,
+              ),
             GetBuilder<LocationController>(builder: (_) {
               return Container(
                 height: size.height,
                 width: size.width * 0.65,
-                child: GoogleMap(
+                child:initialLocation == null ? Center(
+                  child: CircularProgressIndicator(),
+                ) :GoogleMap(
                     myLocationEnabled: true,
                     compassEnabled: true,
                     tiltGesturesEnabled: false,
@@ -105,7 +132,7 @@ class _UserLocationTimeLineViewState extends State<UserLocationTimeLineView> {
                     polylines: locationController.polylines,
                     mapType:
                         isSataliteView ? MapType.satellite : MapType.normal,
-                    initialCameraPosition: initialLocation,
+                    initialCameraPosition: initialLocation!,
                     onMapCreated: onMapCreated),
               );
             }),

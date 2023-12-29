@@ -81,12 +81,21 @@ class _UserListScreenState extends State<UserListScreen> {
    ];
 
 var startDate = DateTime.now().subtract(const Duration(days: 2));
-  var endDate = DateTime.now();
+  var endDate = DateTime.now().add(const Duration(days: 1));
 
   @override
   void initState() {
     super.initState();
-    
+    // setDefault();
+  }
+
+
+  setDefault(){
+   WidgetsBinding.instance.addPostFrameCallback((_) {
+     if(locationController.userHistory.isEmpty){
+       _showDialouge(context);
+    }
+   });
   }
 
 
@@ -115,7 +124,7 @@ var startDate = DateTime.now().subtract(const Duration(days: 2));
         context: context,
         initialDate: endDate,
         firstDate: DateTime(2015, 8),
-        lastDate: DateTime.now());
+        lastDate: DateTime.now().add(Duration(days: 1)));
     if (picked != null && picked != endDate) {
       setState(() {
         endDate = picked;

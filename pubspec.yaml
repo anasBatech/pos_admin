@@ -52,6 +52,7 @@ dependencies:
   timelines: ^0.1.0
   google_fonts: ^4.0.4
   flutter_svg: ^2.0.9
+  geocoding_resolver: ^0.0.3+2
   
 
 dev_dependencies:

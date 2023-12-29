@@ -41,7 +41,7 @@ class _LocationHistoryTrackingState extends State<LocationHistoryTracking> {
 // this is the key object - the PolylinePoints
 // which generates every polyline between start and finish
   PolylinePoints polylinePoints = PolylinePoints();
-  String googleAPIKey = "AIzaSyDergFiQQSAtleFHO8tkKGj2ox1oYRIFsI";
+  // String googleAPIKey = "AIzaSyACBsvJOlGp_buVICn_P5iha5h12vXFRK0";
 
   @override
   void initState() {
