@@ -102,7 +102,7 @@ var startDate = DateTime.now().subtract(const Duration(days: 2));
 
     var selectedUser;
 
-     Future<void> _selectStartDate(BuildContext context) async {
+  Future<void> _selectStartDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: startDate,
@@ -115,7 +115,6 @@ var startDate = DateTime.now().subtract(const Duration(days: 2));
       if(selectedUser != null){
            locationController.getUserHistory(selectedUser, startDate, endDate);
       }
-      
     }
   }
 
@@ -323,7 +322,7 @@ var startDate = DateTime.now().subtract(const Duration(days: 2));
                      Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                         Image.asset("assets/icons/pos_logo.png",height: 110,),
+                         Image.asset("assets/icons/befco_img.jpeg",height: 110,),
                       ],
                      ),
                       // Text('Digital Data',
